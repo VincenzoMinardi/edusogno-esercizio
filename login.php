@@ -47,44 +47,47 @@
 
 
 <?php
+session_start();
 require_once "Connect.php";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST["email"]) && isset($_POST["password"])) {
-        $email = $_POST["email"];
-        $password = $_POST["password"];
+if (isset($_POST['email']) && isset($_POST['password'])) {
+    function validate($data)
+    {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
 
+    $email = validate($_POST['email']);
+    $password = validate($_POST['password']);
 
-        $sql = "SELECT * FROM utenti WHERE email = '$email'";
-        $result = $conn->query($sql);
+    if (empty($email)) {
+        header("Location: index.php?error=Email is required");
+        exit();
+    } else if (empty($password)) {
+        header("Location: index.php?error=Password is required");
+        exit();
+    } else {
+        $sql = "SELECT * FROM utenti WHERE email='$email' AND password='$password'";
 
-        if ($result) {
-            if ($result->num_rows == 1) {
-                $row = $result->fetch_assoc();
-                // Verificare la password
-                if (password_verify($password, $row['password'])) {
-                    session_start();
-                    $_SESSION['id'] = $row['id'];
-                    $_SESSION['email'] = $row['email'];
-                    header('location: homepage.php');
-                } else {
-                    echo "La password non è corretta";
-                }
-            } else {
-                echo "Nessun account trovato con questa email";
+        $result = mysqli_query($conn, $sql);
+
+        if (mysqli_num_rows($result) === 1) {
+            $row = mysqli_fetch_assoc($result);
+            if (password_verify($password, $row['password'])) {
+                $_SESSION['email'] = $row['email'];
+                $_SESSION['password'] = $row['password'];
+                $_SESSION['nome'] = $row['nome'];
+                $_SESSION['cognome'] = $row['cognome'];
+                $_SESSION['id'] = $row['id'];
+                header("Location: homepage.php");
+                exit();
             }
         } else {
-            echo "Errore nella query: " . $conn->error;
+            header("Location: index.php?error=Email or Password not valid");
+            exit();
         }
     }
 }
-
-$conn->close();
-
-
-
-
-
-
-
 ?>
