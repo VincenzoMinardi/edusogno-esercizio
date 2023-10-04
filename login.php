@@ -26,7 +26,7 @@
         <div class="container-register">
             <h2 class="title">Accedi al tuo account</h2>
             <div class="container-form">
-                <form action="homepage.php" method="POST">
+                <form action="" method="POST">
                     <div class="cont-text">
                         <label class="text" for="nome">Inserisci l'email:</label>
                         <input class="input" type="email" id="email" name="email" placeholder="abcd@libero.it" required>
@@ -50,6 +50,19 @@
 session_start();
 require_once "Connect.php";
 
+if (!$conn) {
+    die("Connessione fallita: " . mysqli_connect_error());
+}
+
+$db_name = "db_edusogno";
+
+if (!mysqli_select_db($conn, $db_name)) {
+    die("Selezione del database fallita: " . mysqli_error($conn));
+}
+
+
+
+
 if (isset($_POST['email']) && isset($_POST['password'])) {
     function validate($data)
     {
@@ -62,32 +75,25 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     $email = validate($_POST['email']);
     $password = validate($_POST['password']);
 
-    if (empty($email)) {
-        header("Location: index.php?error=Email is required");
-        exit();
-    } else if (empty($password)) {
-        header("Location: index.php?error=Password is required");
-        exit();
-    } else {
-        $sql = "SELECT * FROM utenti WHERE email='$email' AND password='$password'";
+    $sql = "SELECT * FROM utenti WHERE email='$email'";
+    $result = mysqli_query($conn, $sql);
 
-        $result = mysqli_query($conn, $sql);
-
-        if (mysqli_num_rows($result) === 1) {
-            $row = mysqli_fetch_assoc($result);
-            if (password_verify($password, $row['password'])) {
-                $_SESSION['email'] = $row['email'];
-                $_SESSION['password'] = $row['password'];
-                $_SESSION['nome'] = $row['nome'];
-                $_SESSION['cognome'] = $row['cognome'];
-                $_SESSION['id'] = $row['id'];
-                header("Location: homepage.php");
-                exit();
-            }
+    if (mysqli_num_rows($result) === 1) {
+        $row = mysqli_fetch_assoc($result);
+        if (password_verify($password, $row['password'])) {
+            $_SESSION['email'] = $row['email'];
+            $_SESSION['password'] = $row['password'];
+            $_SESSION['nome'] = $row['nome'];
+            $_SESSION['cognome'] = $row['cognome'];
+            $_SESSION['id'] = $row['id'];
+            header("Location: homepage.php");
+            exit();
         } else {
-            header("Location: index.php?error=Email or Password not valid");
+            echo '<h1>Email o password non validi, riprova!</h1>';
             exit();
         }
     }
 }
+
+
 ?>
