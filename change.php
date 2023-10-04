@@ -12,12 +12,11 @@ require_once 'Connect.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="./assets/js/script.js" defer></script>
-    <title>Edusogno</title>
+    <title>Cambio Password</title>
 </head>
 
 <body>
     <h1>Cambia qui la tua password</h1>
-
 </body>
 
 
