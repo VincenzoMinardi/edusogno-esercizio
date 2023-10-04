@@ -1,3 +1,7 @@
+<?php
+require_once 'Connect.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +10,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Login</title>
+    <script src="./assets/js/script.js" defer></script>
 </head>
 
 <body>
@@ -37,6 +42,7 @@
                     </div>
                     <button class="button-register" type="submit"> Accedi</button>
                 </form>
+                <button class="button-change" id="change">Cambia password</button>
             </div>
 
         </div>
@@ -60,9 +66,6 @@ if (!mysqli_select_db($conn, $db_name)) {
     die("Selezione del database fallita: " . mysqli_error($conn));
 }
 
-
-
-
 if (isset($_POST['email']) && isset($_POST['password'])) {
     function validate($data)
     {
@@ -75,12 +78,13 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     $email = validate($_POST['email']);
     $password = validate($_POST['password']);
 
-    $sql = "SELECT * FROM utenti WHERE email='$email'";
+    $sql = "SELECT * FROM utenti WHERE email= '$email' AND password='$password'";
+
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) === 1) {
         $row = mysqli_fetch_assoc($result);
-        if (password_verify($password, $row['password'])) {
+        if ($row['email'] === $email && $row['password'] === $password) {
             $_SESSION['email'] = $row['email'];
             $_SESSION['password'] = $row['password'];
             $_SESSION['nome'] = $row['nome'];
