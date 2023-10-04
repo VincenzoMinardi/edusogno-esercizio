@@ -54,27 +54,45 @@
 
 <?php
 require_once "Connect.php";
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["nome"]) && isset($_POST["cognome"]) && isset($_POST["email"]) && isset($_POST["password"])) {
-        $name = $_POST["nome"];
-        $surname = $_POST["cognome"];
-        $email = $_POST["email"];
-        $pass = $_POST["password"];
+        function validate($data)
+        {
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+            return $data;
+        }
+
+        $name = validate($_POST["nome"]);
+        $surname = validate($_POST["cognome"]);
+        $email = validate($_POST["email"]);
+        $password = validate($_POST["password"]);
 
 
         if ($conn->select_db("db_edusogno")) {
-            $sql = "INSERT INTO utenti (nome, cognome, email, password) VALUES ('$name', '$surname', '$email', '$pass')";
+            $checkEmailQuery = "SELECT * FROM utenti WHERE email = '$email'";
+            $result = $conn->query($checkEmailQuery);
 
-            if ($conn->query($sql) === true) {
-                header('location:login.php');
+            if ($result->num_rows > 0) {
+                echo "<h1>Questa email è già stata registrata.</h1>" . $conn->connect_error;
             } else {
-                echo "Registrazione non effettuata: " . $conn->error;
+                $sql = "INSERT INTO utenti (nome, cognome, email, password) VALUES ('$name', '$surname', '$email', '$password')";
+
+                if ($conn->query($sql) === true) {
+                    header('location: login.php');
+                } else {
+                    echo "Registrazione non effettuata: " . $conn->error;
+                }
             }
+        } else {
+            echo "Selezione del database fallita: " . $conn->error;
         }
     }
 }
 
-
 $conn->close();
+
+
 ?>
