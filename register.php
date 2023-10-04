@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sql = "INSERT INTO utenti (nome, cognome, email, password) VALUES ('$name', '$surname', '$email', '$pass')";
 
             if ($conn->query($sql) === true) {
-                echo "Registrazione effettuata con successo!";
+                header('location:login.php');
             } else {
                 echo "Registrazione non effettuata: " . $conn->error;
             }
