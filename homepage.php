@@ -1,22 +1,51 @@
 <?php
+require_once 'Connect.php';
 session_start();
 
 if (isset($_SESSION['nome'])) {
-    $nome = $_SESSION['nome'];
+    $username = $_SESSION['nome'];
 } else {
-    $nome = "Utente Sconosciuto";
+    $username = "Utente";
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Homepage</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="homepage.css">
+    <script src="./assets/js/script.js" defer></script>
+    <title>HomePage</title>
 </head>
 
 <body>
-    <h1 class="title-homepage">Benvenuto <?php echo $nome ?></h1>
+
+    <div class="container">
+        <h1>Benvenuto <?php echo $username ?></h1>
+        <div class="card-event">
+            <div class="card">
+                <h1 class="card-title">Nome Evento</h1>
+                <p class="card-text">10-09-2023</p>
+                <button class="view">View</button>
+            </div>
+
+            <div class="card">
+                <h1 class="card-title">Nome Evento</h1>
+                <p class="card-text">10-09-2023</p>
+                <button class="view">View</button>
+            </div>
+
+            <div class="card">
+                <h1 class="card-title">Nome Evento</h1>
+                <p class="card-text">10-09-2023</p>
+                <button class="view">View</button>
+            </div>
+        </div>
+    </div>
+
+
 </body>
 
 </html>
