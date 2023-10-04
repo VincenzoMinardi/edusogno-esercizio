@@ -22,11 +22,11 @@
         </div>
     </header>
     <main>
-        <!-- Modulo di registrazione -->
+        <!-- Modulo di login -->
         <div class="container-register">
             <h2 class="title">Accedi al tuo account</h2>
             <div class="container-form">
-                <form action="process_registration.php" method="POST">
+                <form action="homepage.php" method="POST">
                     <div class="cont-text">
                         <label class="text" for="nome">Inserisci l'email:</label>
                         <input class="input" type="email" id="email" name="email" placeholder="abcd@libero.it" required>
@@ -47,23 +47,44 @@
 
 
 <?php
-
-require_once 'Connect.php';
+require_once "Connect.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST["username"];
-    $password = $_POST["password"];
+    if (isset($_POST["email"]) && isset($_POST["password"])) {
+        $email = $_POST["email"];
+        $password = $_POST["password"];
 
 
+        $sql = "SELECT * FROM utenti WHERE email = '$email'";
+        $result = $conn->query($sql);
 
-    $sql = "SELECT * FROM utenti WHERE username";
-
-    if ($conn->query($sql) === true) {
-        echo "Registrazione effettuata con successo!";
-    } else {
-        echo "Registrazione non effettuata: " . $conn->error;
+        if ($result) {
+            if ($result->num_rows == 1) {
+                $row = $result->fetch_assoc();
+                // Verificare la password
+                if (password_verify($password, $row['password'])) {
+                    session_start();
+                    $_SESSION['id'] = $row['id'];
+                    $_SESSION['email'] = $row['email'];
+                    header('location: homepage.php');
+                } else {
+                    echo "La password non è corretta";
+                }
+            } else {
+                echo "Nessun account trovato con questa email";
+            }
+        } else {
+            echo "Errore nella query: " . $conn->error;
+        }
     }
 }
+
+$conn->close();
+
+
+
+
+
 
 
 ?>
