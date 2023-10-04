@@ -1,0 +1,34 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: cadetblue;
+}
+
+.container {
+  margin: auto;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.card-event {
+  display: flex;
+  justify-content: space-around;
+}
+
+.card {
+  margin-top: 3rem;
+  height: 150px;
+  width: 400px;
+  border-radius: 1rem;
+  border: 10px solid black;
+}
+
+.view {
+  margin-top: 1rem;
+  height: 50px;
+  width: 100px;
+  color: white;
+  background-color: rgba(33, 151, 247, 0.938);
+  border-radius: 0.5rem;
+}
