@@ -90,6 +90,12 @@ button {
   scale: 0.7;
 }
 
+.button-change {
+  height: 50px;
+  width: 150px;
+  border: none;
+  border: 1px solid white;
+}
 /* *************** ************** */
 
 /* STYLE REGISTRATION AND LOGIN */
