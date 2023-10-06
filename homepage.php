@@ -21,6 +21,11 @@ if (isset($_SESSION['nome'])) {
 </head>
 
 <body>
+    <header>
+        <div>
+            <button class="view" id="logout">Logout</button>
+        </div>
+    </header>
 
     <div class="container">
         <h1>Benvenuto <?php echo $username ?></h1>
