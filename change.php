@@ -4,25 +4,33 @@ require_once 'Connect.php';
 
 if (isset($_POST['new_password'])) {
     $new_password = $_POST['new_password'];
-    $user_id = $_POST['user_id'];
-
+    $email = $_POST['email'];
 
     $conn = new mysqli($servername, $username, $password, $dbname);
-
 
     if ($conn->connect_error) {
         die("Connessione fallita: " . $conn->connect_error);
     }
 
-    $sql = "UPDATE utenti SET password = '$new_password' WHERE id = '$user_id'";
 
-    if (mysqli_query($conn, $sql)) {
-        echo "La password è stata cambiata correttamente!";
-        exit();
+    $check_email_sql = "SELECT * FROM utenti WHERE email = '$email'";
+    $result = mysqli_query($conn, $check_email_sql);
+
+    if (mysqli_num_rows($result) > 0) {
+
+        $update_password_sql = "UPDATE utenti SET password = '$new_password' WHERE email = '$email'";
+
+        if (mysqli_query($conn, $update_password_sql)) {
+            echo "<h1>La password è stata cambiata correttamente!</h1>";
+            header('location:login.php');
+        } else {
+            echo "<h1>Errore nell'aggiornamento della password:</h1> " . mysqli_error($conn);
+        }
     } else {
-        echo "<h1 La password non è stata cambiata  </h1>";
-        exit();
+        echo "<h1>Email non trovata nel database. Nessuna modifica alla password effettuata.</h1>";
     }
+
+    mysqli_close($conn);
 }
 ?>
 
@@ -42,12 +50,11 @@ if (isset($_POST['new_password'])) {
     <h1 class="title-change">Cambia qui la tua password</h1>
     <main>
         <div class="container-register">
-            <h2 class="title">Accedi al tuo account</h2>
             <div class="container-form">
                 <form action="" method="POST">
                     <div class="cont-text">
-                        <label class="text" for="user_id">Inserisci User ID:</label>
-                        <input class="input" type="text" id="user_id" name="user_id" required>
+                        <label class="text" for="user_id">Inserisci Email:</label>
+                        <input class="input" type="text" id="email" name="email" required>
                     </div>
                     <div class="cont-text">
                         <label class="text" for="new_password">Inserisci la nuova password:</label>
