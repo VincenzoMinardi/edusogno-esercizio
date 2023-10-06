@@ -16,8 +16,8 @@ if (isset($_SESSION['nome'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="homepage.css">
-    <script src="./assets/js/script.js" defer></script>
     <title>HomePage</title>
+    <script src="./assets/js/script.js" defer></script>
 </head>
 
 <body>
